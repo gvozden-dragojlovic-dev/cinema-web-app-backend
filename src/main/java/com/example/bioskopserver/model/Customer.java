@@ -1,99 +1,65 @@
 package com.example.bioskopserver.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
 @Entity
-@Table(name = "kupac")
+@Table(name = "administrator")
 public class Customer {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "KupacID")
-  private Long kupacID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "AdministratorID")
+    private Long customerID;
 
-  @Column(name = "Username", unique = true)
-  private String username;
+    @Column(name = "Ime")
+    private String firstName;
 
-  @Column(name = "Password")
-  private String password;
+    @Column(name = "Prezime")
+    private String lastName;
 
-  @Column(name = "FirstName")
-  private String firstName;
+    @Column(name = "Username", unique = true)
+    private String username;
 
-  @Column(name = "LastName")
-  private String lastName;
+    @Column(name = "Password")
+    private String password;
 
-  @Column(name = "DateOfBirth")
-  private LocalDate dateOfBirth;
+    public Long getCustomerID() {
+        return customerID;
+    }
 
-  @Column(name = "Gender")
-  private String gender;
+    public void setCustomerID(Long customerID) {
+        this.customerID = customerID;
+    }
 
-  @Column(name = "MobileNumber")
-  private String mobileNumber;
+    public String getFirstName() {
+        return firstName;
+    }
 
-  public Long getKupacID() {
-    return kupacID;
-  }
-  
-  public void setKupacID(Long kupacID) {
-    this.kupacID = kupacID;
-  }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-  public String getUsername() {
-    return username;
-  }
-  
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    public String getLastName() {
+        return lastName;
+    }
 
-  public String getPassword() {
-    return password;
-  }
-  
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-  public String getFirstName() {
-    return firstName;
-  }
-  
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
+    public String getUsername() {
+        return username;
+    }
 
-  public String getLastName() {
-    return lastName;
-  }
-  
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-  public LocalDate getDateOfBirth() {
-    return dateOfBirth;
-  }
-  
-  public void setDateOfBirth(LocalDate dateOfBirth) {
-    this.dateOfBirth = dateOfBirth;
-  }
+    public String getPassword() {
+        return password;
+    }
 
-  public String getGender() {
-    return gender;
-  }
-  
-  public void setGender(String gender) {
-    this.gender = gender;
-  }
-
-  public String getMobileNumber() {
-    return mobileNumber;
-  }
-  
-  public void setMobileNumber(String mobileNumber) {
-    this.mobileNumber = mobileNumber;
-  }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

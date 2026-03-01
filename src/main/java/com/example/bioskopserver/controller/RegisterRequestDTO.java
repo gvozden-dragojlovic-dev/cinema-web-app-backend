@@ -4,70 +4,44 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RegisterRequestDTO {
 
-  @JsonProperty("email")
-  private String username;
-  private String firstName;
-  private String lastName;
-  private String dateOfBirth;
-  private String gender;
-  private String mobileNumber;
-  private String password;
+    @JsonProperty("email")
+    private String username;
 
-  public RegisterRequestDTO() {}
+    private String firstName;
+    private String lastName;
+    private String password;
 
-  public String getUsername() {
-    return username;
-  }
-  
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    public RegisterRequestDTO() {}
 
-  public String getFirstName() {
-    return firstName;
-  }
-  
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
+    public String getUsername() {
+        return username;
+    }
 
-  public String getLastName() {
-    return lastName;
-  }
-  
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-  public String getDateOfBirth() {
-    return dateOfBirth;
-  }
-  
-  public void setDateOfBirth(String dateOfBirth) {
-    this.dateOfBirth = dateOfBirth;
-  }
+    public String getFirstName() {
+        return firstName;
+    }
 
-  public String getGender() {
-    return gender;
-  }
-  
-  public void setGender(String gender) {
-    this.gender = gender;
-  }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-  public String getMobileNumber() {
-    return mobileNumber;
-  }
-  
-  public void setMobileNumber(String mobileNumber) {
-    this.mobileNumber = mobileNumber;
-  }
+    public String getLastName() {
+        return lastName;
+    }
 
-  public String getPassword() {
-    return password;
-  }
-  
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

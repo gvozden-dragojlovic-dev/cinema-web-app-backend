@@ -5,9 +5,6 @@ import com.example.bioskopserver.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 @Service
 public class CustomerService {
 
@@ -22,8 +19,7 @@ public class CustomerService {
       .orElse(false);
   }
 
-  public String register(String username, String firstName, String lastName,
-    String dateOfBirthStr, String gender, String mobileNumber, String password) {
+  public String register(String username, String firstName, String lastName, String password) {
 
     if (username == null || username.isBlank()) {
         return "ERROR: Username cannot be empty";
@@ -33,29 +29,17 @@ public class CustomerService {
         return "ERROR: Username already exists";
     }
 
-    LocalDate dob;
-    try {
-      DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
-      dob = LocalDate.parse(dateOfBirthStr, formatter);
-    } catch (Exception e) {
-      throw new RuntimeException("ERROR: Invalid date format. Use yyyy-MM-dd");
-    }
-
-    String finalPassword = (password == null || password.isBlank()) ?
-      generatePassword() : password;
+    String finalPassword = (password == null || password.isBlank())
+            ? generatePassword()
+            : password;
 
     Customer customer = new Customer();
     customer.setUsername(username);
     customer.setPassword(finalPassword);
     customer.setFirstName(firstName);
     customer.setLastName(lastName);
-    customer.setDateOfBirth(dob);
-    customer.setGender(gender);
-    customer.setMobileNumber(mobileNumber);
 
-    System.out.println("Saving customer: " + username);
     customerRepository.save(customer);
-    System.out.println("Saved customer ID: " + customer.getKupacID());
 
     return finalPassword;
   }

@@ -40,13 +40,10 @@ public class CustomerController {
         Map<String, String> response = new HashMap<>();
 
         String result = customerService.register(
-                request.getUsername(),
-                request.getFirstName(),
-                request.getLastName(),
-                request.getDateOfBirth(),
-                request.getGender(),
-                request.getMobileNumber(),
-                request.getPassword()
+            request.getUsername(),
+            request.getFirstName(),
+            request.getLastName(),
+            request.getPassword()
         );
 
         if (result.startsWith("ERROR")) {
