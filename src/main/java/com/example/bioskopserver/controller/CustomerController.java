@@ -1,8 +1,10 @@
 package com.example.bioskopserver.controller;
 
+import com.example.bioskopserver.model.Customer;
 import com.example.bioskopserver.service.CustomerService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +18,27 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDTO request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
 
-        if (request.getUsername() == null || request.getPassword() == null) {
-            return "Invalid username or password";
-        }
-
-        boolean success = customerService.authenticate(
+        Optional<Customer> customerOpt = customerService.authenticate(
                 request.getUsername(),
                 request.getPassword()
         );
 
-        if (success) {
-            return "Login successful";
-        } else {
-            return "Invalid username or password";
+        if (customerOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid username or password");
         }
+
+        Customer customer = customerOpt.get();
+
+        AccountResponseDTO response = new AccountResponseDTO(
+                customer.getCustomerID(),
+                customer.getFirstName(),
+                customer.getLastName(),
+                customer.getUsername()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
@@ -40,10 +47,10 @@ public class CustomerController {
         Map<String, String> response = new HashMap<>();
 
         String result = customerService.register(
-            request.getUsername(),
-            request.getFirstName(),
-            request.getLastName(),
-            request.getPassword()
+                request.getUsername(),
+                request.getFirstName(),
+                request.getLastName(),
+                request.getPassword()
         );
 
         if (result.startsWith("ERROR")) {
@@ -55,5 +62,45 @@ public class CustomerController {
         response.put("password", result);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/account/{id}")
+    public ResponseEntity<?> getAccount(@PathVariable Long id) {
+
+        Optional<Customer> customerOpt = customerService.getCustomerById(id);
+
+        if (customerOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        Customer customer = customerOpt.get();
+
+        AccountResponseDTO response = new AccountResponseDTO(
+                customer.getCustomerID(),
+                customer.getFirstName(),
+                customer.getLastName(),
+                customer.getUsername()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request) {
+
+        try {
+            customerService.changePassword(
+                    request.getAdminId(),
+                    request.getCurrentPassword(),
+                    request.getNewPassword()
+            );
+
+            return ResponseEntity.ok("Password changed successfully");
+
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 }

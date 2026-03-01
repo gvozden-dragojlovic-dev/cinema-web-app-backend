@@ -1,4 +1,7 @@
 C:\Users\MNG\OneDrive\Desktop\projekat\BioskopServerProject\src\main\java\com\example\bioskopserver\BioskopServerApplication.java
+C:\Users\MNG\OneDrive\Desktop\projekat\BioskopServerProject\src\main\java\com\example\bioskopserver\config\SecurityConfig.java
+C:\Users\MNG\OneDrive\Desktop\projekat\BioskopServerProject\src\main\java\com\example\bioskopserver\controller\AccountResponseDTO.java
+C:\Users\MNG\OneDrive\Desktop\projekat\BioskopServerProject\src\main\java\com\example\bioskopserver\controller\ChangePasswordRequestDTO.java
 C:\Users\MNG\OneDrive\Desktop\projekat\BioskopServerProject\src\main\java\com\example\bioskopserver\controller\CustomerController.java
 C:\Users\MNG\OneDrive\Desktop\projekat\BioskopServerProject\src\main\java\com\example\bioskopserver\controller\LoginRequestDTO.java
 C:\Users\MNG\OneDrive\Desktop\projekat\BioskopServerProject\src\main\java\com\example\bioskopserver\controller\RegisterRequestDTO.java
