@@ -1,21 +1,27 @@
-package com.example.bioskopserver.controller;
+package com.example.bioskopserver.model;
 
-public class AccountResponseDTO {
-    
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "gledalac")
+public class Viewer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "GledalacID")
     private Long id;
+
+    @Column(name = "Ime")
     private String firstName;
+
+    @Column(name = "Prezime")
     private String lastName;
+
+    @Column(name = "Email")
     private String email;
 
-    public AccountResponseDTO(Long id, String firstName, String lastName, String email) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
-
-    public AccountResponseDTO() {
-    }
+    @Column(name = "Telefon")
+    private String phone;
 
     public Long getId() {
         return id;
@@ -48,5 +54,12 @@ public class AccountResponseDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

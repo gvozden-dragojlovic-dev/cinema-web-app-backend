@@ -1,1 +1,3 @@
 com\example\bioskopserver\BioskopServerApplication.class
+com\example\bioskopserver\config\SecurityConfig.class
+com\example\bioskopserver\controller\CinemaController.class
