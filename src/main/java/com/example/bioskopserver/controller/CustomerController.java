@@ -1,5 +1,9 @@
 package com.example.bioskopserver.controller;
 
+import com.example.bioskopserver.DTOs.LoginRequestDTO;
+import com.example.bioskopserver.DTOs.AccountResponseDTO;
+import com.example.bioskopserver.DTOs.ChangePasswordRequestDTO;
+import com.example.bioskopserver.DTOs.RegisterRequestDTO;
 import com.example.bioskopserver.model.Customer;
 import com.example.bioskopserver.service.CustomerService;
 import java.util.HashMap;

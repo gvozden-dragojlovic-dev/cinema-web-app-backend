@@ -1,5 +1,7 @@
 package com.example.bioskopserver.controller;
 
+import com.example.bioskopserver.DTOs.HistoryPurchaseDTO;
+import com.example.bioskopserver.DTOs.BuyTicketsRequest;
 import com.example.bioskopserver.model.Hall;
 import com.example.bioskopserver.model.Movie;
 import com.example.bioskopserver.model.Viewer;

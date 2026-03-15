@@ -1,9 +1,9 @@
 package com.example.bioskopserver.service;
 
-import com.example.bioskopserver.controller.BuyTicketsRequest;
-import com.example.bioskopserver.controller.TicketRequest;
-import com.example.bioskopserver.controller.HistoryPurchaseDTO;
-import com.example.bioskopserver.controller.HistoryTicketDTO;
+import com.example.bioskopserver.DTOs.BuyTicketsRequest;
+import com.example.bioskopserver.DTOs.TicketRequest;
+import com.example.bioskopserver.DTOs.HistoryPurchaseDTO;
+import com.example.bioskopserver.DTOs.HistoryTicketDTO;
 import com.example.bioskopserver.model.Administrator;
 import com.example.bioskopserver.model.Hall;
 import com.example.bioskopserver.model.Movie;

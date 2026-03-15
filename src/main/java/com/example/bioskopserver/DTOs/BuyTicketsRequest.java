@@ -1,4 +1,4 @@
-package com.example.bioskopserver.controller;
+package com.example.bioskopserver.DTOs;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
