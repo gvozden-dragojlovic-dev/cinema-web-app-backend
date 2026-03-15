@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.bioskopserver.repository.AdministratorRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.82 s -- in com.example.bioskopserver.repository.AdministratorRepositoryTest
