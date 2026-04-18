@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ScreeningRepository extends JpaRepository<Screening, Long> {
     
-    List<Screening> findByAdministrator_AdministratorID(Long adminId);
+    List<Screening> findByCustomer_CustomerID(Long adminId);
     
 }

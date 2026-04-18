@@ -32,7 +32,7 @@ public class Screening {
     
     @ManyToOne
     @JoinColumn(name = "AdministratorID")
-    private Administrator administrator;
+    private Customer customer;
 
     public Long getId() {
         return id;
@@ -82,11 +82,11 @@ public class Screening {
         this.hall = hall;
     }
 
-    public Administrator getAdministrator() {
-        return administrator;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setAdministrator(Administrator administrator) {
-        this.administrator = administrator;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

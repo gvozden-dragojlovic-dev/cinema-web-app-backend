@@ -4,13 +4,13 @@ import com.example.bioskopserver.DTOs.BuyTicketsRequest;
 import com.example.bioskopserver.DTOs.TicketRequest;
 import com.example.bioskopserver.DTOs.HistoryPurchaseDTO;
 import com.example.bioskopserver.DTOs.HistoryTicketDTO;
-import com.example.bioskopserver.model.Administrator;
+import com.example.bioskopserver.model.Customer;
 import com.example.bioskopserver.model.Hall;
 import com.example.bioskopserver.model.Movie;
 import com.example.bioskopserver.model.Screening;
 import com.example.bioskopserver.model.Ticket;
 import com.example.bioskopserver.model.Viewer;
-import com.example.bioskopserver.repository.AdministratorRepository;
+import com.example.bioskopserver.repository.CustomerRepository;
 import com.example.bioskopserver.repository.HallRepository;
 import com.example.bioskopserver.repository.MovieRepository;
 import com.example.bioskopserver.repository.ScreeningRepository;
@@ -41,7 +41,7 @@ public class CinemaService {
     private TicketRepository ticketRepository;
     
     @Autowired
-    private AdministratorRepository administratorRepository;
+    private CustomerRepository customerRepository;
 
     public List<Movie> getMovies() {
         return movieRepository.findAll();
@@ -66,7 +66,7 @@ public class CinemaService {
                 .findById(request.getHallId())
                 .orElseThrow();
         
-        Administrator admin = administratorRepository
+        Customer customer = customerRepository
         .findById(request.getAdminId())
         .orElseThrow();
 
@@ -75,7 +75,7 @@ public class CinemaService {
 
         screening.setMovie(movie);
         screening.setHall(hall);
-        screening.setAdministrator(admin);
+        screening.setCustomer(customer);
         screening.setTicketPrice(request.getPrice());
         screening.setDateTime(request.getDateTime());
         screening.setProjectionType(request.getProjectionType());
@@ -102,7 +102,7 @@ public class CinemaService {
     public List<HistoryPurchaseDTO> getHistory(Long adminId) {
 
     List<Screening> screenings =
-            screeningRepository.findByAdministrator_AdministratorID(adminId);
+            screeningRepository.findByCustomer_CustomerID(adminId);
 
     return screenings.stream().map(screening -> {
 

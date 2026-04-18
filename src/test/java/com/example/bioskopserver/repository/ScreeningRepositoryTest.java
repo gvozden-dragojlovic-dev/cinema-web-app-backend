@@ -4,7 +4,7 @@
  */
 package com.example.bioskopserver.repository;
 
-import com.example.bioskopserver.model.Administrator;
+import com.example.bioskopserver.model.Customer;
 import com.example.bioskopserver.model.Screening;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,32 +33,32 @@ public class ScreeningRepositoryTest {
     }
 
     @Test
-    public void testFindByAdministrator_AdministratorID() {
-        Administrator admin = new Administrator();
-        admin.setAdministratorID(1L);
+    public void testFindByCustomer_CustomerID() {
+        Customer admin = new Customer();
+        admin.setCustomerID(1L);
 
         Screening s1 = new Screening();
-        s1.setAdministrator(admin);
+        s1.setCustomer(admin);
         Screening s2 = new Screening();
-        s2.setAdministrator(admin);
+        s2.setCustomer(admin);
 
-        when(screeningRepository.findByAdministrator_AdministratorID(1L))
+        when(screeningRepository.findByCustomer_CustomerID(1L))
                 .thenReturn(Arrays.asList(s1, s2));
 
-        List<Screening> screenings = screeningRepository.findByAdministrator_AdministratorID(1L);
+        List<Screening> screenings = screeningRepository.findByCustomer_CustomerID(1L);
 
         assertNotNull(screenings);
         assertEquals(2, screenings.size());
-        assertEquals(admin, screenings.get(0).getAdministrator());
-        assertEquals(admin, screenings.get(1).getAdministrator());
+        assertEquals(admin, screenings.get(0).getCustomer());
+        assertEquals(admin, screenings.get(1).getCustomer());
 
-        verify(screeningRepository, times(1)).findByAdministrator_AdministratorID(1L);
+        verify(screeningRepository, times(1)).findByCustomer_CustomerID(1L);
     }
 
     @Test
     public void testSaveAndDeleteScreening() {
         Screening screening = new Screening();
-        screening.setAdministrator(new Administrator());
+        screening.setCustomer(new Customer());
         
         when(screeningRepository.save(screening)).thenReturn(screening);
         Screening saved = screeningRepository.save(screening);

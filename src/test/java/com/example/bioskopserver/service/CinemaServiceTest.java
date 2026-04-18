@@ -12,13 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.example.bioskopserver.DTOs.BuyTicketsRequest;
 import com.example.bioskopserver.DTOs.HistoryPurchaseDTO;
 import com.example.bioskopserver.DTOs.TicketRequest;
-import com.example.bioskopserver.model.Administrator;
+import com.example.bioskopserver.model.Customer;
 import com.example.bioskopserver.model.Hall;
 import com.example.bioskopserver.model.Movie;
 import com.example.bioskopserver.model.Screening;
 import com.example.bioskopserver.model.Ticket;
 import com.example.bioskopserver.model.Viewer;
-import com.example.bioskopserver.repository.AdministratorRepository;
+import com.example.bioskopserver.repository.CustomerRepository;
 import com.example.bioskopserver.repository.HallRepository;
 import com.example.bioskopserver.repository.MovieRepository;
 import com.example.bioskopserver.repository.ScreeningRepository;
@@ -56,7 +56,7 @@ public class CinemaServiceTest {
     private TicketRepository ticketRepository;
 
     @Mock
-    private AdministratorRepository administratorRepository;
+    private CustomerRepository customerRepository;
 
     @InjectMocks
     private CinemaService cinemaService;
@@ -157,12 +157,12 @@ public class CinemaServiceTest {
 
         Movie movie = new Movie();
         Hall hall = new Hall();
-        Administrator admin = new Administrator();
+        Customer customer = new Customer();
         Viewer viewer = new Viewer();
 
         when(movieRepository.findById(1L)).thenReturn(java.util.Optional.of(movie));
         when(hallRepository.findById(1L)).thenReturn(java.util.Optional.of(hall));
-        when(administratorRepository.findById(1L)).thenReturn(java.util.Optional.of(admin));
+        when(customerRepository.findById(1L)).thenReturn(java.util.Optional.of(customer));
         when(viewerRepository.findById(1L)).thenReturn(java.util.Optional.of(viewer));
 
         cinemaService.buyTickets(request);
@@ -202,7 +202,7 @@ public class CinemaServiceTest {
         List<Screening> screenings = List.of(screening);
         List<Ticket> tickets = List.of(ticket);
 
-        when(screeningRepository.findByAdministrator_AdministratorID(adminId))
+        when(screeningRepository.findByCustomer_CustomerID(adminId))
                 .thenReturn(screenings);
 
         when(ticketRepository.findByScreening(screening))
