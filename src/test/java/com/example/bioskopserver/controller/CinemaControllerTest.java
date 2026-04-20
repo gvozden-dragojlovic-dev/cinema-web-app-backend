@@ -8,6 +8,7 @@ import com.example.bioskopserver.DTOs.BuyTicketsRequest;
 import com.example.bioskopserver.DTOs.HistoryPurchaseDTO;
 import com.example.bioskopserver.model.Hall;
 import com.example.bioskopserver.model.Movie;
+import com.example.bioskopserver.model.Screening;
 import com.example.bioskopserver.model.Viewer;
 import com.example.bioskopserver.service.CinemaService;
 import java.math.BigDecimal;
@@ -83,12 +84,9 @@ public class CinemaControllerTest {
 
     @Test
     void testBuyTickets() {
+
         BuyTicketsRequest request = new BuyTicketsRequest();
-        request.setMovieId(1L);
-        request.setHallId(1L);
-        request.setProjectionType("2D");
-        request.setPrice(BigDecimal.valueOf(500));
-        request.setDateTime(LocalDateTime.now());
+        request.setScreeningId(1L);
         request.setAdminId(1L);
         request.setTickets(Collections.emptyList());
 
@@ -98,6 +96,7 @@ public class CinemaControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Tickets successfully purchased", response.getBody());
+
         verify(cinemaService, times(1)).buyTickets(request);
     }
 
@@ -118,5 +117,44 @@ public class CinemaControllerTest {
 
         assertEquals(1, result.size());
         assertEquals("Avengers", result.get(0).getMovieTitle());
+    }
+    
+    @Test
+    void testGetScreenings() {
+
+        Screening screening = new Screening();
+
+        Long movieId = 1L;
+        Long hallId = 1L;
+        Long adminId = 1L;
+
+        when(cinemaService.getScreenings(movieId, hallId, adminId))
+                .thenReturn(Collections.singletonList(screening));
+
+        List<Screening> result =
+                cinemaController.getScreenings(movieId, hallId, adminId);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+
+        verify(cinemaService, times(1))
+                .getScreenings(movieId, hallId, adminId);
+    }
+    
+    @Test
+    void testGetOccupiedSeats() {
+        Long screeningId = 1L;
+
+        when(cinemaService.getOccupiedSeats(screeningId))
+                .thenReturn(Arrays.asList("A1", "A2"));
+
+        List<String> result = cinemaController.getOccupiedSeats(screeningId);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.contains("A1"));
+        assertTrue(result.contains("A2"));
+
+        verify(cinemaService, times(1)).getOccupiedSeats(screeningId);
     }
 }

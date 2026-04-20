@@ -4,13 +4,11 @@ import com.example.bioskopserver.DTOs.BuyTicketsRequest;
 import com.example.bioskopserver.DTOs.TicketRequest;
 import com.example.bioskopserver.DTOs.HistoryPurchaseDTO;
 import com.example.bioskopserver.DTOs.HistoryTicketDTO;
-import com.example.bioskopserver.model.Customer;
 import com.example.bioskopserver.model.Hall;
 import com.example.bioskopserver.model.Movie;
 import com.example.bioskopserver.model.Screening;
 import com.example.bioskopserver.model.Ticket;
 import com.example.bioskopserver.model.Viewer;
-import com.example.bioskopserver.repository.CustomerRepository;
 import com.example.bioskopserver.repository.HallRepository;
 import com.example.bioskopserver.repository.MovieRepository;
 import com.example.bioskopserver.repository.ScreeningRepository;
@@ -40,9 +38,6 @@ public class CinemaService {
     @Autowired
     private TicketRepository ticketRepository;
     
-    @Autowired
-    private CustomerRepository customerRepository;
-
     public List<Movie> getMovies() {
         return movieRepository.findAll();
     }
@@ -55,33 +50,26 @@ public class CinemaService {
         return viewerRepository.findAll();
     }
 
+    public List<Screening> getScreenings(Long movieId, Long hallId, Long adminId) {
+        return screeningRepository.
+        findByMovie_IdAndHall_IdAndCustomer_CustomerID(movieId, hallId, adminId);
+    }
+    
+    public List<String> getOccupiedSeats(Long screeningId) {
+
+        List<Ticket> tickets = ticketRepository.findByScreening_Id(screeningId);
+
+        return tickets.stream()
+                .map(Ticket::getSeat)
+                .collect(Collectors.toList());
+    }
+    
     @Transactional
     public void buyTickets(BuyTicketsRequest request) {
 
-        Movie movie = movieRepository
-                .findById(request.getMovieId())
+        Screening screening = screeningRepository
+                .findById(request.getScreeningId())
                 .orElseThrow();
-
-        Hall hall = hallRepository
-                .findById(request.getHallId())
-                .orElseThrow();
-        
-        Customer customer = customerRepository
-        .findById(request.getAdminId())
-        .orElseThrow();
-
-
-        Screening screening = new Screening();
-
-        screening.setMovie(movie);
-        screening.setHall(hall);
-        screening.setCustomer(customer);
-        screening.setTicketPrice(request.getPrice());
-        screening.setDateTime(request.getDateTime());
-        screening.setProjectionType(request.getProjectionType());
-
-        screeningRepository.save(screening);
-
 
         for (TicketRequest t : request.getTickets()) {
 
@@ -90,7 +78,6 @@ public class CinemaService {
                     .orElseThrow();
 
             Ticket ticket = new Ticket();
-
             ticket.setScreening(screening);
             ticket.setViewer(viewer);
             ticket.setSeat(t.getSeat());
@@ -101,31 +88,35 @@ public class CinemaService {
     
     public List<HistoryPurchaseDTO> getHistory(Long adminId) {
 
-    List<Screening> screenings =
-            screeningRepository.findByCustomer_CustomerID(adminId);
+        List<Screening> screenings =
+                screeningRepository.findByCustomer_CustomerID(adminId);
 
-    return screenings.stream().map(screening -> {
+        return screenings.stream().map(screening -> {
 
-        List<Ticket> tickets = ticketRepository.findByScreening(screening);
+            List<Ticket> tickets = ticketRepository.findByScreening(screening);
 
-        List<HistoryTicketDTO> ticketDTOs = tickets.stream()
-                .map(t -> new HistoryTicketDTO(
-                        t.getViewer().getFirstName(),
-                        t.getViewer().getLastName(),
-                        t.getViewer().getEmail(),
-                        t.getSeat()
-                ))
-                .collect(Collectors.toList());
+            List<Ticket> filtered = tickets.stream()
+                    .filter(t -> t.getViewer() != null)
+                    .collect(Collectors.toList());
 
-        return new HistoryPurchaseDTO(
-                screening.getMovie().getTitle(),
-                screening.getHall().getName(),
-                screening.getDateTime(),
-                screening.getProjectionType(),
-                screening.getTicketPrice(),
-                screening.getDateTime(),
-                ticketDTOs
-        );
+            List<HistoryTicketDTO> ticketDTOs = filtered.stream()
+                    .map(t -> new HistoryTicketDTO(
+                            t.getViewer().getFirstName(),
+                            t.getViewer().getLastName(),
+                            t.getViewer().getEmail(),
+                            t.getSeat()
+                    ))
+                    .collect(Collectors.toList());
+
+            return new HistoryPurchaseDTO(
+                    screening.getMovie().getTitle(),
+                    screening.getHall().getName(),
+                    screening.getDateTime(),
+                    screening.getProjectionType(),
+                    screening.getTicketPrice(),
+                    screening.getDateTime(),
+                    ticketDTOs
+            );
 
         }).collect(Collectors.toList());
     }

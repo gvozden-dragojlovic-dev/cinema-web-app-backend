@@ -1,90 +1,76 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
 package com.example.bioskopserver.repository;
 
+import com.example.bioskopserver.BioskopServerApplication;
 import com.example.bioskopserver.model.Viewer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-/**
- *
- * @author MNG
- */
+@SpringBootTest(classes = BioskopServerApplication.class)
 public class ViewerRepositoryTest {
-    
-    @Mock
+
+    @Autowired
     private ViewerRepository viewerRepository;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    private Viewer viewer;
 
-    @Test
-    public void testSaveViewer() {
-        Viewer viewer = new Viewer();
+    @BeforeEach
+    void setUp() {
+        viewer = new Viewer();
         viewer.setFirstName("John");
         viewer.setLastName("Doe");
 
-        when(viewerRepository.save(viewer)).thenReturn(viewer);
+        viewer = viewerRepository.save(viewer);
+    }
 
-        Viewer saved = viewerRepository.save(viewer);
-
-        assertNotNull(saved);
-        assertEquals("John", saved.getFirstName());
-        assertEquals("Doe", saved.getLastName());
-        verify(viewerRepository, times(1)).save(viewer);
+    @AfterEach
+    void tearDown() {
+        viewerRepository.deleteAll();
     }
 
     @Test
-    public void testFindById() {
-        Viewer viewer = new Viewer();
-        viewer.setId(1L);
-        viewer.setFirstName("Jane");
-        viewer.setLastName("Doe");
+    void testSaveViewer() {
+        assertNotNull(viewer.getId());
+        assertEquals("John", viewer.getFirstName());
+        assertEquals("Doe", viewer.getLastName());
+    }
 
-        when(viewerRepository.findById(1L)).thenReturn(Optional.of(viewer));
-
-        Optional<Viewer> found = viewerRepository.findById(1L);
+    @Test
+    void testFindById() {
+        Optional<Viewer> found = viewerRepository.findById(viewer.getId());
 
         assertTrue(found.isPresent());
-        assertEquals("Jane", found.get().getFirstName());
+        assertEquals("John", found.get().getFirstName());
         assertEquals("Doe", found.get().getLastName());
-        verify(viewerRepository, times(1)).findById(1L);
     }
 
     @Test
-    public void testFindAll() {
-        Viewer v1 = new Viewer();
-        v1.setFirstName("Viewer 1");
-        Viewer v2 = new Viewer();
-        v2.setLastName("Viewer 2");
-
-        when(viewerRepository.findAll()).thenReturn(Arrays.asList(v1, v2));
-
+    void testFindAll() {
         List<Viewer> viewers = viewerRepository.findAll();
 
-        assertEquals(2, viewers.size());
-        verify(viewerRepository, times(1)).findAll();
+        assertFalse(viewers.isEmpty());
+        assertTrue(viewers.stream().anyMatch(v -> v.getFirstName().equals("John")));
     }
 
     @Test
-    public void testDelete() {
-        doNothing().when(viewerRepository).deleteById(anyLong());
+    void testDeleteViewer() {
+        Viewer temp = new Viewer();
+        temp.setFirstName("Temp");
+        temp.setLastName("User");
 
-        viewerRepository.deleteById(1L);
+        temp = viewerRepository.save(temp);
+        Long id = temp.getId();
 
-        verify(viewerRepository, times(1)).deleteById(1L);
+        viewerRepository.deleteById(id);
+
+        Optional<Viewer> deleted = viewerRepository.findById(id);
+        assertFalse(deleted.isPresent());
     }
 }

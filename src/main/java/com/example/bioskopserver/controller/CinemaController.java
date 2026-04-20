@@ -4,6 +4,7 @@ import com.example.bioskopserver.DTOs.HistoryPurchaseDTO;
 import com.example.bioskopserver.DTOs.BuyTicketsRequest;
 import com.example.bioskopserver.model.Hall;
 import com.example.bioskopserver.model.Movie;
+import com.example.bioskopserver.model.Screening;
 import com.example.bioskopserver.model.Viewer;
 import com.example.bioskopserver.service.CinemaService;
 import java.util.List;
@@ -43,6 +44,18 @@ public class CinemaController {
         return cinemaService.getViewers();
     }
 
+
+    @GetMapping("/screenings")
+    public List<Screening> getScreenings(Long movieId, Long hallId, Long adminId) {
+        
+        return cinemaService.getScreenings(movieId, hallId, adminId);
+    }
+    
+    @GetMapping("/occupied-seats/{screeningId}")
+    public List<String> getOccupiedSeats(@PathVariable Long screeningId) {
+        
+        return cinemaService.getOccupiedSeats(screeningId);
+    }
 
     @PostMapping("/buy")
     public ResponseEntity<String> buyTickets(@RequestBody BuyTicketsRequest request) {

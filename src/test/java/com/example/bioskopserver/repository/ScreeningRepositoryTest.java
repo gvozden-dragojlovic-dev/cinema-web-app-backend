@@ -1,72 +1,101 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
 package com.example.bioskopserver.repository;
 
-import com.example.bioskopserver.model.Customer;
-import com.example.bioskopserver.model.Screening;
+import com.example.bioskopserver.BioskopServerApplication;
+import com.example.bioskopserver.model.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-
-/**
- *
- * @author MNG
- */
+@SpringBootTest(classes = BioskopServerApplication.class)
 public class ScreeningRepositoryTest {
-    
-    @Mock
+
+    @Autowired
     private ScreeningRepository screeningRepository;
 
+    @Autowired
+    private MovieRepository movieRepository;
+
+    @Autowired
+    private HallRepository hallRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    private Movie movie;
+    private Hall hall;
+    private Customer customer;
+    private Screening screening;
+
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    void setUp() {
+
+        movie = new Movie();
+        movie.setTitle("Inception");
+        movie = movieRepository.save(movie);
+
+        hall = new Hall();
+        hall.setName("Main Hall");
+        hall = hallRepository.save(hall);
+
+        customer = new Customer();
+        customer.setUsername("admin");
+        customer.setPassword("pass");
+        customer = customerRepository.save(customer);
+
+        screening = new Screening();
+        screening.setMovie(movie);
+        screening.setHall(hall);
+        screening.setCustomer(customer);
+
+        screening.setDateTime(LocalDateTime.of(2026, 4, 19, 20, 0));
+        screening.setTicketPrice(new BigDecimal("10.50"));
+
+        screening = screeningRepository.save(screening);
+    }
+
+    @AfterEach
+    void tearDown() {
+        screeningRepository.deleteAll();
+        customerRepository.deleteAll();
+        movieRepository.deleteAll();
+        hallRepository.deleteAll();
     }
 
     @Test
-    public void testFindByCustomer_CustomerID() {
-        Customer admin = new Customer();
-        admin.setCustomerID(1L);
+    void testFindByMovieHallAndCustomer() {
 
-        Screening s1 = new Screening();
-        s1.setCustomer(admin);
-        Screening s2 = new Screening();
-        s2.setCustomer(admin);
+        List<Screening> result =
+                screeningRepository.findByMovie_IdAndHall_IdAndCustomer_CustomerID(
+                        movie.getId(),
+                        hall.getId(),
+                        customer.getCustomerID()
+                );
 
-        when(screeningRepository.findByCustomer_CustomerID(1L))
-                .thenReturn(Arrays.asList(s1, s2));
-
-        List<Screening> screenings = screeningRepository.findByCustomer_CustomerID(1L);
-
-        assertNotNull(screenings);
-        assertEquals(2, screenings.size());
-        assertEquals(admin, screenings.get(0).getCustomer());
-        assertEquals(admin, screenings.get(1).getCustomer());
-
-        verify(screeningRepository, times(1)).findByCustomer_CustomerID(1L);
+        assertFalse(result.isEmpty());
+        assertEquals(movie.getId(), result.get(0).getMovie().getId());
+        assertEquals(hall.getId(), result.get(0).getHall().getId());
+        assertEquals(customer.getCustomerID(),
+                result.get(0).getCustomer().getCustomerID());
     }
 
     @Test
-    public void testSaveAndDeleteScreening() {
-        Screening screening = new Screening();
-        screening.setCustomer(new Customer());
-        
-        when(screeningRepository.save(screening)).thenReturn(screening);
-        Screening saved = screeningRepository.save(screening);
-        assertNotNull(saved);
-        verify(screeningRepository, times(1)).save(screening);
+    void testFindByCustomerId() {
 
-        doNothing().when(screeningRepository).deleteById(anyLong());
-        screeningRepository.deleteById(1L);
-        verify(screeningRepository, times(1)).deleteById(1L);
+        List<Screening> result =
+                screeningRepository.findByCustomer_CustomerID(
+                        customer.getCustomerID()
+                );
+
+        assertFalse(result.isEmpty());
+        assertEquals(customer.getCustomerID(),
+                result.get(0).getCustomer().getCustomerID());
     }
 }

@@ -11,4 +11,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     
     List<Ticket> findByScreening(Screening screening);
     
+    List<Ticket> findByScreeningAndViewer_IdIn(Screening screening, List<Long> viewerIds);
+    
+    List<Ticket> findByScreening_Id(Long screeningId);
 }

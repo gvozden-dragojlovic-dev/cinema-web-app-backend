@@ -1,0 +1,10 @@
+com\example\bioskopserver\repository\MovieRepositoryTest.class
+com\example\bioskopserver\repository\HallRepositoryTest.class
+com\example\bioskopserver\repository\CustomerRepositoryTest.class
+com\example\bioskopserver\controller\CustomerControllerTest.class
+com\example\bioskopserver\repository\ViewerRepositoryTest.class
+com\example\bioskopserver\repository\TicketRepositoryTest.class
+com\example\bioskopserver\repository\ScreeningRepositoryTest.class
+com\example\bioskopserver\service\CinemaServiceTest.class
+com\example\bioskopserver\service\CustomerServiceTest.class
+com\example\bioskopserver\controller\CinemaControllerTest.class

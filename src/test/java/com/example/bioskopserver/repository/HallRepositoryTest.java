@@ -4,85 +4,80 @@
  */
 package com.example.bioskopserver.repository;
 
+import com.example.bioskopserver.BioskopServerApplication;
 import com.example.bioskopserver.model.Hall;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  *
  * @author MNG
  */
+@SpringBootTest(classes = BioskopServerApplication.class)
 public class HallRepositoryTest {
-    
-    @Mock
+
+    @Autowired
     private HallRepository hallRepository;
 
+    private Hall hall;
+
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    public void testSaveHall() {
-        Hall hall = new Hall();
+    void setUp() {
+        hall = new Hall();
         hall.setName("Main Hall");
 
-        when(hallRepository.save(hall)).thenReturn(hall);
+        hall = hallRepository.save(hall);
+    }
 
-        Hall savedHall = hallRepository.save(hall);
-
-        assertNotNull(savedHall);
-        assertEquals("Main Hall", savedHall.getName());
-        verify(hallRepository, times(1)).save(hall);
+    @AfterEach
+    void tearDown() {
+        try {
+            hallRepository.delete(hall);
+        } catch (Exception ignored) {
+        }
     }
 
     @Test
-    public void testFindById() {
-        Hall hall = new Hall();
-        hall.setId(1L);
-        hall.setName("Main Hall");
-
-        when(hallRepository.findById(1L)).thenReturn(Optional.of(hall));
-
-        Optional<Hall> foundHall = hallRepository.findById(1L);
-        assertTrue(foundHall.isPresent());
-        assertEquals("Main Hall", foundHall.get().getName());
-        verify(hallRepository, times(1)).findById(1L);
+    void testSaveHall() {
+        assertNotNull(hall.getId(), "Hall ID should not be null after save");
+        assertEquals("Main Hall", hall.getName());
     }
 
     @Test
-    public void testFindAll() {
-        Hall hall1 = new Hall();
-        hall1.setName("Hall 1");
-        Hall hall2 = new Hall();
-        hall2.setName("Hall 2");
+    void testFindById() {
+        Optional<Hall> found = hallRepository.findById(hall.getId());
 
-        when(hallRepository.findAll()).thenReturn(Arrays.asList(hall1, hall2));
+        assertTrue(found.isPresent());
+        assertEquals("Main Hall", found.get().getName());
+    }
 
+    @Test
+    void testFindAll() {
         List<Hall> halls = hallRepository.findAll();
-        assertEquals(2, halls.size());
-        verify(hallRepository, times(1)).findAll();
+
+        assertFalse(halls.isEmpty());
+        assertTrue(halls.stream().anyMatch(h -> h.getName().equals("Main Hall")));
     }
 
     @Test
-    public void testDelete() {
-        Hall hall = new Hall();
-        hall.setId(1L);
+    void testDeleteHall() {
+        Hall temp = new Hall();
+        temp.setName("Temp Hall");
+        temp = hallRepository.save(temp);
 
-        doNothing().when(hallRepository).deleteById(1L);
+        Long id = temp.getId();
 
-        hallRepository.deleteById(1L);
+        hallRepository.deleteById(id);
 
-        verify(hallRepository, times(1)).deleteById(1L);
+        Optional<Hall> deleted = hallRepository.findById(id);
+        assertFalse(deleted.isPresent());
     }
-    
 }

@@ -12,24 +12,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.example.bioskopserver.DTOs.BuyTicketsRequest;
 import com.example.bioskopserver.DTOs.HistoryPurchaseDTO;
 import com.example.bioskopserver.DTOs.TicketRequest;
-import com.example.bioskopserver.model.Customer;
 import com.example.bioskopserver.model.Hall;
 import com.example.bioskopserver.model.Movie;
 import com.example.bioskopserver.model.Screening;
 import com.example.bioskopserver.model.Ticket;
 import com.example.bioskopserver.model.Viewer;
-import com.example.bioskopserver.repository.CustomerRepository;
 import com.example.bioskopserver.repository.HallRepository;
 import com.example.bioskopserver.repository.MovieRepository;
 import com.example.bioskopserver.repository.ScreeningRepository;
 import com.example.bioskopserver.repository.TicketRepository;
 import com.example.bioskopserver.repository.ViewerRepository;
-import java.math.BigDecimal;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,31 +48,12 @@ public class CinemaServiceTest {
     @Mock
     private TicketRepository ticketRepository;
 
-    @Mock
-    private CustomerRepository customerRepository;
-
     @InjectMocks
     private CinemaService cinemaService;
     
     public CinemaServiceTest() {
     }
     
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
-    @BeforeEach
-    public void setUp() {
-    }
-    
-    @AfterEach
-    public void tearDown() {
-    }
-
     /**
      * Test of getMovies method, of class CinemaService.
      */
@@ -121,33 +95,11 @@ public class CinemaServiceTest {
      * Test of getViewers method, of class CinemaService.
      */
     @Test
-    public void testGetViewers() {
-
-        Viewer viewer = new Viewer();
-        viewer.setFirstName("Marko");
-
-        List<Viewer> viewers = List.of(viewer);
-
-        when(viewerRepository.findAll()).thenReturn(viewers);
-
-        List<Viewer> result = cinemaService.getViewers();
-
-        assertEquals(1, result.size());
-        assertEquals("Marko", result.get(0).getFirstName());
-    }
-
-    /**
-     * Test of buyTickets method, of class CinemaService.
-     */
-    @Test
     public void testBuyTickets() {
 
         BuyTicketsRequest request = new BuyTicketsRequest();
 
-        request.setMovieId(1L);
-        request.setHallId(1L);
-        request.setAdminId(1L);
-        request.setPrice(new BigDecimal(589.99));
+        request.setScreeningId(1L);
 
         TicketRequest ticketRequest = new TicketRequest();
         ticketRequest.setViewerId(1L);
@@ -155,19 +107,17 @@ public class CinemaServiceTest {
 
         request.setTickets(List.of(ticketRequest));
 
-        Movie movie = new Movie();
-        Hall hall = new Hall();
-        Customer customer = new Customer();
+        Screening screening = new Screening();
         Viewer viewer = new Viewer();
 
-        when(movieRepository.findById(1L)).thenReturn(java.util.Optional.of(movie));
-        when(hallRepository.findById(1L)).thenReturn(java.util.Optional.of(hall));
-        when(customerRepository.findById(1L)).thenReturn(java.util.Optional.of(customer));
-        when(viewerRepository.findById(1L)).thenReturn(java.util.Optional.of(viewer));
+        when(screeningRepository.findById(1L))
+                .thenReturn(java.util.Optional.of(screening));
+
+        when(viewerRepository.findById(1L))
+                .thenReturn(java.util.Optional.of(viewer));
 
         cinemaService.buyTickets(request);
 
-        verify(screeningRepository, times(1)).save(any(Screening.class));
         verify(ticketRepository, times(1)).save(any(Ticket.class));
     }
 

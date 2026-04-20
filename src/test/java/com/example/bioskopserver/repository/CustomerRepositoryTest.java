@@ -4,6 +4,7 @@
  */
 package com.example.bioskopserver.repository;
 
+import com.example.bioskopserver.BioskopServerApplication;
 import com.example.bioskopserver.model.Customer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author MNG
  */
-@SpringBootTest
+@SpringBootTest(classes = BioskopServerApplication.class)
 public class CustomerRepositoryTest {
 
     @Autowired

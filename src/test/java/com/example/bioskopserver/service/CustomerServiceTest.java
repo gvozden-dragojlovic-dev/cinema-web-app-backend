@@ -7,14 +7,14 @@ package com.example.bioskopserver.service;
 import com.example.bioskopserver.model.Customer;
 import com.example.bioskopserver.repository.CustomerRepository;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * @author MNG
  */
+@ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {
 
     @Mock
@@ -32,11 +33,6 @@ public class CustomerServiceTest {
 
     @InjectMocks
     private CustomerService customerService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testAuthenticateSuccess() {
