@@ -73,4 +73,11 @@ public class CustomerService {
         customer.setPassword(passwordEncoder.encode(newPassword));
         customerRepository.save(customer);
     }
+    
+    public void logout(Long id) {
+
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+    }
 }

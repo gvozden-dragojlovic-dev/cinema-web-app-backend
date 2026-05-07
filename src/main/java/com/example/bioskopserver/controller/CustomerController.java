@@ -107,4 +107,20 @@ public class CustomerController {
                     .body(e.getMessage());
         }
     }
+    
+    @PostMapping("/logout/{id}")
+    public ResponseEntity<?> logout(@PathVariable Long id) {
+
+        try {
+            customerService.logout(id);
+
+            return ResponseEntity.ok("Logout successful");
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
 }
